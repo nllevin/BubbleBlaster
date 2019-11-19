@@ -14,7 +14,8 @@ const SPRITES_MAP = {
     1: [44.5, 2],
     2: [78.5, 2],
     3: [112.5, 2],
-    4: [146.5, 2]
+    4: [146.5, 2],
+    5: [78.5, 2]
   },
   "left": {
     0: [355.5, 2],
@@ -22,6 +23,7 @@ const SPRITES_MAP = {
     2: [287.5, 2],
     3: [254.5, 2],
     4: [220.5, 2],
+    5: [287.5, 2]
   }
 };
 
@@ -35,7 +37,7 @@ export default class Player {
   animate(ctx, playerSprites) {
     ctx.drawImage(
       playerSprites[this.orientation],
-      ...(SPRITES_MAP[this.orientation][Math.floor(this.spriteIdx / CONSTANTS.ANIMATION_RATE) % 5]),
+      ...(SPRITES_MAP[this.orientation][Math.floor(this.spriteIdx / CONSTANTS.ANIMATION_RATE) % 6]),
       ...CONSTANTS.SPRITE_SIZE,
       this.pos, CONSTANTS.FLOOR_HEIGHT - CONSTANTS.PLAYER_HEIGHT,
       CONSTANTS.PLAYER_WIDTH, CONSTANTS.PLAYER_HEIGHT
