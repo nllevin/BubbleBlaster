@@ -5,7 +5,7 @@ export default class BubbleBlaster {
   constructor(canvas) {
     this.ctx = canvas;
     this.level = new Level();
-    this.player = new Player();
+    this.player = new Player(canvas);
     
     this.preloaded = false;
     this.images = {};
@@ -36,6 +36,7 @@ export default class BubbleBlaster {
     if (!this.preloaded) {
       // display loading bar
     } else {
+      this.player.update();
       this.level.animate(this.ctx, this.images.background);
       this.player.animate(this.ctx, this.images.players);
     }
