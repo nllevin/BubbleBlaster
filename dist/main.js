@@ -94,7 +94,7 @@
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, \"default\", function() { return BubbleBlaster; });\n/* harmony import */ var _level__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./level */ \"./src/level.js\");\n\n\nclass BubbleBlaster {\n  constructor(canvas) {\n    this.ctx = canvas;\n    \n    this.preloaded = false;\n    this.images = {};\n    this.loadImages([\"background\"]);\n    \n    this.animate = this.animate.bind(this);\n    this.animate();\n  }\n  \n  loadImages(imageNames) {\n    imageNames.forEach(imageName => {\n      const image = new Image();\n      \n      image.onload = () => {\n        this.images[imageName] = image;\n        if (Object.keys(this.images).length === imageNames.length) {\n          this.preloaded = true;\n          this.level = new _level__WEBPACK_IMPORTED_MODULE_0__[\"default\"](this.images.background);\n        }\n      };\n\n      image.src = `./assets/${imageName}.png`;\n    });\n  }\n\n  animate() {\n    window.requestAnimationFrame(this.animate);\n\n    if (!this.preloaded) {\n      // display loading bar\n    } else {\n      this.level.animate(this.ctx);\n    }\n  }\n}\n\n//# sourceURL=webpack:///./src/game.js?");
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, \"default\", function() { return BubbleBlaster; });\n/* harmony import */ var _level__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./level */ \"./src/level.js\");\n/* harmony import */ var _player__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./player */ \"./src/player.js\");\n\n\n\nclass BubbleBlaster {\n  constructor(canvas) {\n    this.ctx = canvas;\n    this.level = new _level__WEBPACK_IMPORTED_MODULE_0__[\"default\"]();\n    this.player = new _player__WEBPACK_IMPORTED_MODULE_1__[\"default\"]();\n    \n    this.preloaded = false;\n    this.images = {};\n    this.loadImages([\"background\", \"players\"]);\n    \n    this.animate = this.animate.bind(this);\n    this.animate();\n  }\n  \n  loadImages(imageNames) {\n    imageNames.forEach(imageName => {\n      const image = new Image();\n      \n      image.onload = () => {\n        this.images[imageName] = image;\n        if (Object.keys(this.images).length === imageNames.length) {\n          this.preloaded = true;\n        }\n      };\n\n      image.src = `./assets/${imageName}.png`;\n    });\n  }\n\n  animate() {\n    window.requestAnimationFrame(this.animate);\n\n    if (!this.preloaded) {\n      // display loading bar\n    } else {\n      this.level.animate(this.ctx, this.images.background);\n      this.player.animate(this.ctx, this.images.players);\n    }\n  }\n}\n\n//# sourceURL=webpack:///./src/game.js?");
 
 /***/ }),
 
@@ -118,7 +118,19 @@ eval("__webpack_require__.r(__webpack_exports__);\n/* harmony import */ var _gam
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, \"default\", function() { return Level; });\nconst CONSTANTS = {\n  BACKGROUND_WIDTH: 384,\n  BACKGROUND_HEIGHT: 208\n};\n\nclass Level {\n  constructor(background) {\n    this.background = background;\n  }\n\n  animate(ctx) {\n    ctx.drawImage(\n      this.background, \n      8, 8, \n      CONSTANTS.BACKGROUND_WIDTH, CONSTANTS.BACKGROUND_HEIGHT, \n      0, 0, \n      ctx.canvas.width, ctx.canvas.height\n    );\n  }\n}\n\n//# sourceURL=webpack:///./src/level.js?");
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, \"default\", function() { return Level; });\nconst CONSTANTS = {\n  BACKGROUND_WIDTH: 384,\n  BACKGROUND_HEIGHT: 208,\n  LEVEL_X: 76,\n  LEVEL_Y: 5,\n  LEVEL_WIDTH: 731 + 2 * 8,\n  LEVEL_HEIGHT: 394 + 2 * 8,\n};\n\nclass Level {\n  constructor() {\n  }\n\n  animate(ctx, backgroundImage) {\n    ctx.fillStyle = \"blue\";\n    ctx.fillRect(0, 0, ctx.canvas.width, ctx.canvas.height);\n    ctx.drawImage(\n      backgroundImage, \n      8, 8, \n      CONSTANTS.BACKGROUND_WIDTH, CONSTANTS.BACKGROUND_HEIGHT, \n      CONSTANTS.LEVEL_X, CONSTANTS.LEVEL_Y, \n      CONSTANTS.LEVEL_WIDTH, CONSTANTS.LEVEL_HEIGHT\n    );\n  }\n}\n\n//# sourceURL=webpack:///./src/level.js?");
+
+/***/ }),
+
+/***/ "./src/player.js":
+/*!***********************!*\
+  !*** ./src/player.js ***!
+  \***********************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, \"default\", function() { return Player; });\nconst CONSTANTS = {\n  STANDING_X: 11,\n  STANDING_Y: 112,\n  SPRITE_WIDTH: 30,\n  SPRITE_HEIGHT: 31,\n  FLOOR_HEIGHT: 400,\n  PLAYER_WIDTH: 45,\n  PLAYER_HEIGHT: 46.5\n};\n\nclass Player {\n  animate(ctx, playerImage) {\n    ctx.drawImage(\n      playerImage,\n      CONSTANTS.STANDING_X, CONSTANTS.STANDING_Y,\n      CONSTANTS.SPRITE_WIDTH, CONSTANTS.SPRITE_HEIGHT,\n      (ctx.canvas.width - CONSTANTS.PLAYER_WIDTH) / 2, CONSTANTS.FLOOR_HEIGHT - CONSTANTS.PLAYER_HEIGHT,\n      CONSTANTS.PLAYER_WIDTH, CONSTANTS.PLAYER_HEIGHT\n    );\n  }\n}\n\n//# sourceURL=webpack:///./src/player.js?");
 
 /***/ })
 

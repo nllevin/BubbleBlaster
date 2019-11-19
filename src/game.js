@@ -1,12 +1,15 @@
 import Level from "./level";
+import Player from "./player";
 
 export default class BubbleBlaster {
   constructor(canvas) {
     this.ctx = canvas;
+    this.level = new Level();
+    this.player = new Player();
     
     this.preloaded = false;
     this.images = {};
-    this.loadImages(["background"]);
+    this.loadImages(["background", "players"]);
     
     this.animate = this.animate.bind(this);
     this.animate();
@@ -20,7 +23,6 @@ export default class BubbleBlaster {
         this.images[imageName] = image;
         if (Object.keys(this.images).length === imageNames.length) {
           this.preloaded = true;
-          this.level = new Level(this.images.background);
         }
       };
 
@@ -34,7 +36,8 @@ export default class BubbleBlaster {
     if (!this.preloaded) {
       // display loading bar
     } else {
-      this.level.animate(this.ctx);
+      this.level.animate(this.ctx, this.images.background);
+      this.player.animate(this.ctx, this.images.players);
     }
   }
 }
