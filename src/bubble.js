@@ -34,6 +34,12 @@ const BUBBLE_CONSTANTS = {
     2: [42, 42],
     3: [60, 60]
   },
+  Y_MIN: {
+    0: 310,
+    1: 240,
+    2: 212,
+    3: 192
+  },
   X_VEL: 1.1,
   GRAVITY: 0.11
 };
@@ -42,10 +48,13 @@ export default class Bubble {
   constructor(ctx, bubble) {
     this.color = bubble.color;
     this.size = bubble.size;
-    this.x_pos = ctx.canvas.width / 4;
+
+    this.x_pos = bubble.x_init;
     this.y_pos = bubble.y_init;
+
     this.y_min = bubble.y_init - this.dims()[1];
     this.x_dir = bubble.x_dir;
+    this.y_vel_init = -1;
     this.time = 0;
   }
 
@@ -60,24 +69,28 @@ export default class Bubble {
   }
 
   center() {
-    return [this.x_pos + this.dims()[0], this.y_pos + this.dims()[1]];
+    return [this.x_pos + this.dims()[0] / 2, this.y_pos + this.dims()[1] / 2];
+  }
+
+  collidesWith(obj) {
+    const objBounds = obj.getBounds();
+    if (
+      this.center()[1] + this.radius() < objBounds[0][1] + this.radius() / 4
+      || this.center()[0] + this.radius() < objBounds[0][0] + this.radius() / 4
+      || this.center()[0] - this.radius() > objBounds[1][0] - this.radius() / 4
+    ) {
+      return false;
+    } else {
+      return true;
+    }
   }
 
   dims() {
     return BUBBLE_CONSTANTS.DIMS[this.size];
   }
 
-  collidesWith(obj) {
-    const objBounds = obj.getBounds();
-    if (
-      this.center()[1] + this.radius() < objBounds[0][1] + 10
-      || this.center()[0] + this.radius() < objBounds[0][0] + 10
-      || this.center()[0] - this.radius() > objBounds[1][0] - 10
-    ) {
-      return false;
-    } else {
-      return true;
-    }
+  getY() {
+    return this.y_min + this.y_vel_init * this.time + 0.5 * BUBBLE_CONSTANTS.GRAVITY * this.time * this.time;
   }
 
   radius() {
@@ -88,13 +101,13 @@ export default class Bubble {
     if (this.x_pos <= 92 || this.x_pos + this.dims()[0] >= 807) {
       this.x_dir = -this.x_dir;
     }
-    if ((this.y_min + 1 / 2 * BUBBLE_CONSTANTS.GRAVITY * this.time * this.time) >= (400 - this.dims()[1])) {
-      // this.y_vel = -this.y_vel
-      this.time = -this.time;
+    if ( this.getY() >= (400 - this.dims()[1])) {
+      this.y_min = BUBBLE_CONSTANTS.Y_MIN[this.size];
+      this.y_vel_init = 0;
+      this.time = -Math.sqrt(((400 - this.dims()[1]) - this.y_min) * 2 / BUBBLE_CONSTANTS.GRAVITY);
     } 
-    // this.y_vel = Math.sqrt(2 * (this.y_max - this.y_pos) * BUBBLE_CONSTANTS.GRAVITY);
-    // this.y_pos = this.y_pos + this.y_vel;
-    this.y_pos = this.y_min + 1 / 2 * BUBBLE_CONSTANTS.GRAVITY * this.time * this.time;
+
+    this.y_pos = this.getY();
     this.x_pos = this.x_pos + BUBBLE_CONSTANTS.X_VEL * this.x_dir;
     this.time = this.time + 1;
   }

@@ -7,12 +7,22 @@ export default class BubbleBlaster {
     this.ctx = canvas;
     this.level = new Level();
     this.player = new Player(canvas);
-    this.bubble = new Bubble(canvas, {
-      color: "GREEN", 
-      size: 0, 
-      x_dir: 1, 
-      y_init: 210
-    });
+    this.bubbles = [
+      new Bubble(canvas, {
+        color: "GREEN", 
+        size: 0, 
+        x_dir: -1, 
+        x_init: canvas.canvas.width * 0.25,
+        y_init: 210
+      }),
+      new Bubble(canvas, {
+        color: "GREEN", 
+        size: 3, 
+        x_dir: -1,
+        x_init: canvas.canvas.width * 0.75,
+        y_init: 210
+      })
+    ];
     
     this.preloaded = false;
     this.images = {};
@@ -34,7 +44,7 @@ export default class BubbleBlaster {
     if (this.player.harpoon) {
       this.player.harpoon.animate(this.ctx, this.images.items);
     }
-    this.bubble.animate(this.ctx, this.images.bubbles);
+    this.bubbles.forEach(bubble => bubble.animate(this.ctx, this.images.bubbles));
     this.player.animate(this.ctx, {
       right: this.images.players, 
       left: this.images.mirrorPlayers,
@@ -66,7 +76,7 @@ export default class BubbleBlaster {
     } else if (!this.frozen) {
       this.update();
       this.animate();
-      if (this.bubble.collidesWith(this.player)) {
+      if (this.bubbles.some(bubble => bubble.collidesWith(this.player))) {
         this.frozen = true;
         this.player.orientation = "dying";
         this.player.spriteIdx = 0;
@@ -82,6 +92,6 @@ export default class BubbleBlaster {
 
   update() {
     this.player.update();
-    this.bubble.update();
+    this.bubbles.forEach(bubble => bubble.update());
   }
 }
