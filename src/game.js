@@ -9,7 +9,7 @@ export default class BubbleBlaster {
     
     this.preloaded = false;
     this.images = {};
-    this.loadImages(["background", "players", "mirrorPlayers"]);
+    this.loadImages(["background", "players", "mirrorPlayers", "items"]);
     
     this.animate = this.animate.bind(this);
     this.animate();
@@ -36,8 +36,10 @@ export default class BubbleBlaster {
     if (!this.preloaded) {
       // display loading bar
     } else {
-      this.player.update();
       this.level.animate(this.ctx, this.images.background);
+      if (this.player.harpoon) {
+        this.player.harpoon.animate(this.ctx, this.images.items);
+      }
       this.player.animate(this.ctx, {
         "right": this.images.players, 
         "left": this.images.mirrorPlayers
