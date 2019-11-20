@@ -27,12 +27,16 @@ const PLAYER_SPRITES_MAP = {
     3: [254.5, 2],
     4: [220.5, 2],
     5: [287.5, 2]
+  },
+  "dying": {
+    0: [148, 78]
   }
 };
 
 export default class Player {
   constructor(ctx) {
-    this.pos = (ctx.canvas.width - CONSTANTS.PLAYER_WIDTH) / 2;
+    this.x_pos = (ctx.canvas.width - CONSTANTS.PLAYER_WIDTH) / 2;
+    this.y_pos = CONSTANTS.FLOOR_HEIGHT - CONSTANTS.PLAYER_HEIGHT;
     this.orientation = "right";
     this.spriteIdx = -1;
     this.harpoon = null;
@@ -40,14 +44,25 @@ export default class Player {
   }
 
   animate(ctx, playerSprites) {
-    this.update();
     ctx.drawImage(
       playerSprites[this.orientation],
       ...PLAYER_SPRITES_MAP[this.orientation][Math.floor(this.spriteIdx / CONSTANTS.ANIMATION_RATE) % 6],
       ...CONSTANTS.SPRITE_SIZE,
-      this.pos, CONSTANTS.FLOOR_HEIGHT - CONSTANTS.PLAYER_HEIGHT,
+      this.x_pos, this.y_pos,
       CONSTANTS.PLAYER_WIDTH, CONSTANTS.PLAYER_HEIGHT
     );
+  }
+
+  deathThroes(frame) {
+    this.x_pos = this.x_pos - CONSTANTS.VEL;
+    this.y_pos = (CONSTANTS.FLOOR_HEIGHT - CONSTANTS.PLAYER_HEIGHT) - 1.5 * CONSTANTS.VEL * frame + 0.5 * 0.11 * frame * frame;
+  }
+
+  getBounds() {
+    return [
+      [this.x_pos, CONSTANTS.FLOOR_HEIGHT - CONSTANTS.PLAYER_HEIGHT],
+      [this.x_pos + CONSTANTS.PLAYER_WIDTH, CONSTANTS.FLOOR_HEIGHT]
+    ];
   }
 
   update() {
@@ -56,7 +71,7 @@ export default class Player {
     }
 
     if ((key.isPressed("space") && !this.harpoon) || this.isFiring) {
-      this.harpoon = this.harpoon || new Harpoon(4 + this.pos + CONSTANTS.SPRITE_SIZE[0] / 2);
+      this.harpoon = this.harpoon || new Harpoon(4 + this.x_pos + CONSTANTS.SPRITE_SIZE[0] / 2);
       this.isFiring = this.isFiring + 1;
       if (this.isFiring <= 1.25 * CONSTANTS.ANIMATION_RATE) {
         this.orientation = "right";
@@ -67,14 +82,14 @@ export default class Player {
       } else {
         this.isFiring = false;
       }
-    } else if (key.isPressed("left") && this.pos > (90.4 + CONSTANTS.VEL)) {
+    } else if (key.isPressed("left") && this.x_pos > (90.4 + CONSTANTS.VEL)) {
       this.orientation = "left";
       this.spriteIdx = this.spriteIdx + 1;
-      this.pos = this.pos - CONSTANTS.VEL;
-    } else if (key.isPressed("right") && this.pos < (770.2 - CONSTANTS.VEL)) {
+      this.x_pos = this.x_pos - CONSTANTS.VEL;
+    } else if (key.isPressed("right") && this.x_pos < (770.2 - CONSTANTS.VEL)) {
       this.orientation = "right";
       this.spriteIdx = this.spriteIdx + 1;
-      this.pos = this.pos + CONSTANTS.VEL;
+      this.x_pos = this.x_pos + CONSTANTS.VEL;
     } else {
       this.orientation = "right";
       this.spriteIdx = -1;

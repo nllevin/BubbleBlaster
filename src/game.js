@@ -23,11 +23,26 @@ export default class BubbleBlaster {
       "items", 
       "bubbles"
     ]);
+    this.frozen = false;
     
-    this.animate = this.animate.bind(this);
-    this.animate();
+    this.play = this.play.bind(this);
+    this.play();
   }
   
+  animate() {
+    this.level.animate(this.ctx, this.images.background);
+    if (this.player.harpoon) {
+      this.player.harpoon.animate(this.ctx, this.images.items);
+    }
+    this.bubble.animate(this.ctx, this.images.bubbles);
+    this.player.animate(this.ctx, {
+      right: this.images.players, 
+      left: this.images.mirrorPlayers,
+      dying: this.images.players
+    });
+    
+  }
+
   loadImages(imageNames) {
     imageNames.forEach(imageName => {
       const image = new Image();
@@ -43,21 +58,30 @@ export default class BubbleBlaster {
     });
   }
 
-  animate() {
-    window.requestAnimationFrame(this.animate);
+  play() {
+    window.requestAnimationFrame(this.play);
 
     if (!this.preloaded) {
       // display loading bar
-    } else {
-      this.level.animate(this.ctx, this.images.background);
-      if (this.player.harpoon) {
-        this.player.harpoon.animate(this.ctx, this.images.items);
+    } else if (!this.frozen) {
+      this.update();
+      this.animate();
+      if (this.bubble.collidesWith(this.player)) {
+        this.frozen = true;
+        this.player.orientation = "dying";
+        this.player.spriteIdx = 0;
+        this.lossSequenceFrame = 1;
       }
-      this.player.animate(this.ctx, {
-        "right": this.images.players, 
-        "left": this.images.mirrorPlayers
-      });
-      this.bubble.animate(this.ctx, this.images.bubbles);
+    } else {
+      this.player.deathThroes(this.lossSequenceFrame);
+      this.animate();
+      this.lossSequenceFrame = this.lossSequenceFrame + 1;
     }
+
+  }
+
+  update() {
+    this.player.update();
+    this.bubble.update();
   }
 }
