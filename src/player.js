@@ -56,7 +56,7 @@ export default class Player {
     }
 
     if ((key.isPressed("space") && !this.harpoon) || this.isFiring) {
-      this.harpoon = this.harpoon || new Harpoon(this.pos + CONSTANTS.SPRITE_SIZE[0] / 2);
+      this.harpoon = this.harpoon || new Harpoon(4 + this.pos + CONSTANTS.SPRITE_SIZE[0] / 2);
       this.isFiring = this.isFiring + 1;
       if (this.isFiring <= 1.25 * CONSTANTS.ANIMATION_RATE) {
         this.orientation = "right";
@@ -66,7 +66,6 @@ export default class Player {
         this.spriteIdx = -1;
       } else {
         this.isFiring = false;
-        // this.harpoon = null;
       }
     } else if (key.isPressed("left") && this.pos > (90.4 + CONSTANTS.VEL)) {
       this.orientation = "left";
