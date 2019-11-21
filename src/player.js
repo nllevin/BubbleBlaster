@@ -76,7 +76,7 @@ export default class Player {
       if (this.isFiring <= 1.25 * CONSTANTS.ANIMATION_RATE) {
         this.orientation = "right";
         this.spriteIdx = -2 * CONSTANTS.ANIMATION_RATE;
-      } else if (this.isFiring <= 2 * CONSTANTS.ANIMATION_RATE) {
+      } else if (this.isFiring <= 1.75 * CONSTANTS.ANIMATION_RATE) {
         this.orientation = "right";
         this.spriteIdx = -1;
       } else {

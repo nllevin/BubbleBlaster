@@ -33,7 +33,8 @@ export default class BubbleBlaster {
       "players", 
       "mirrorPlayers", 
       "items", 
-      "bubbles"
+      "bubbles",
+      "spikes"
     ]);
     this.frozen = false;
     
@@ -42,7 +43,7 @@ export default class BubbleBlaster {
   }
   
   animate() {
-    this.level.animate(this.ctx, this.images.background);
+    this.level.animate(this.ctx, this.images.background, this.images.spikes);
     if (this.player.harpoon) {
       this.player.harpoon.animate(this.ctx, this.images.items);
     }
@@ -60,36 +61,46 @@ export default class BubbleBlaster {
       this.player.orientation = "dying";
       this.player.spriteIdx = 0;
       this.lossSequenceFrame = 1;
-    } else if (this.player.harpoon) {
-      const poppedBubbleIdx = this.bubbles.findIndex(bubble => {
-        return bubble.collidesWith(this.player.harpoon);
-      });
-      if (poppedBubbleIdx !== -1) {
-        this.player.harpoon = null;
-        let newBubbles = this.bubbles.slice();
-        newBubbles.splice(poppedBubbleIdx, 1);
+    } else {
+      let bubblesCopy = this.bubbles.slice();
+      let newBubbles = [];
 
-        const poppedBubble = this.bubbles[poppedBubbleIdx];
-        if (poppedBubble.size) {
-          newBubbles = newBubbles.concat([
-            new Bubble(this.ctx, {
-              color: poppedBubble.color,
-              size: poppedBubble.size - 1,
-              x_dir: -1,
-              x_init: poppedBubble.x_pos + 0.375 * poppedBubble.radius(),
-              y_init: poppedBubble.y_pos + 0.375 * poppedBubble.radius()
-            }),
-            new Bubble(this.ctx, {
-              color: poppedBubble.color,
-              size: poppedBubble.size - 1,
-              x_dir: 1,
-              x_init: poppedBubble.x_pos + 0.375 * poppedBubble.radius(),
-              y_init: poppedBubble.y_pos + 0.375 * poppedBubble.radius()
-            })
-          ]);
+      bubblesCopy.forEach(bubble => {
+        if (bubble.y_pos > 32) {
+          newBubbles.push(bubble);
         }
-        this.bubbles = newBubbles;
+      });
+
+      if (this.player.harpoon) {
+        const poppedBubbleIdx = this.bubbles.findIndex(bubble => {
+          return bubble.collidesWith(this.player.harpoon);
+        });
+        if (poppedBubbleIdx !== -1) {
+          this.player.harpoon = null;
+          newBubbles.splice(poppedBubbleIdx, 1);
+
+          const poppedBubble = this.bubbles[poppedBubbleIdx];
+          if (poppedBubble.size) {
+            newBubbles = newBubbles.concat([
+              new Bubble(this.ctx, {
+                color: poppedBubble.color,
+                size: poppedBubble.size - 1,
+                x_dir: -1,
+                x_init: poppedBubble.x_pos + 0.375 * poppedBubble.radius(),
+                y_init: poppedBubble.y_pos + 0.5 * poppedBubble.radius()
+              }),
+              new Bubble(this.ctx, {
+                color: poppedBubble.color,
+                size: poppedBubble.size - 1,
+                x_dir: 1,
+                x_init: poppedBubble.x_pos + 0.375 * poppedBubble.radius(),
+                y_init: poppedBubble.y_pos + 0.5 * poppedBubble.radius()
+              })
+            ]);
+          }
+        }
       }
+      this.bubbles = newBubbles;
     }
   }
 

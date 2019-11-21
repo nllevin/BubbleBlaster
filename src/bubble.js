@@ -54,7 +54,7 @@ export default class Bubble {
 
     this.y_min = bubble.y_init - this.dims()[1];
     this.x_dir = bubble.x_dir;
-    this.y_vel_init = bubble.y_vel_init || this.zeroTime() * BUBBLE_CONSTANTS.GRAVITY;
+    this.y_vel_init = bubble.y_vel_init || this.zeroTime() * BUBBLE_CONSTANTS.GRAVITY * (6 - this.size) / 6;
     this.time = 0;
   }
 

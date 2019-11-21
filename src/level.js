@@ -11,15 +11,30 @@ export default class Level {
   constructor() {
   }
 
-  animate(ctx, backgroundImage) {
+  animate(ctx, backgroundSprites, spikesSprites) {
     ctx.fillStyle = "blue";
     ctx.fillRect(0, 0, ctx.canvas.width, ctx.canvas.height);
     ctx.drawImage(
-      backgroundImage, 
+      backgroundSprites, 
       8, 8, 
       CONSTANTS.BACKGROUND_WIDTH, CONSTANTS.BACKGROUND_HEIGHT, 
       CONSTANTS.LEVEL_X, CONSTANTS.LEVEL_Y, 
       CONSTANTS.LEVEL_WIDTH, CONSTANTS.LEVEL_HEIGHT
+    );
+    
+    ctx.drawImage(
+      spikesSprites,
+      111, 110,
+      526, 16,
+      CONSTANTS.LEVEL_X + 2 * 8.5, CONSTANTS.LEVEL_Y + 2 * 8,
+      (CONSTANTS.LEVEL_WIDTH - 4 * 8) / 2, 10
+    );
+    ctx.drawImage(
+      spikesSprites,
+      111, 110,
+      526, 16,
+      CONSTANTS.LEVEL_X + 2 * 8 + (CONSTANTS.LEVEL_WIDTH - 4 * 8) / 2, CONSTANTS.LEVEL_Y + 2 * 8,
+      (CONSTANTS.LEVEL_WIDTH - 4 * 8) / 2, 10
     );
   }
 }
