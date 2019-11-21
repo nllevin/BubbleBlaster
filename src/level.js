@@ -8,12 +8,15 @@ const CONSTANTS = {
   LEVEL_Y: 5,
   LEVEL_WIDTH: 731 + 2 * 8,
   LEVEL_HEIGHT: 394 + 2 * 8,
+  FPS: 60,
+  TIME: 45
 };
 
 export default class Level {
   constructor(canvas, images) {
     this.ctx = canvas;
     this.images = images;
+    this.time = CONSTANTS.TIME * CONSTANTS.FPS;
 
     this.player = new Player(canvas);
     this.bubbles = [
@@ -36,9 +39,6 @@ export default class Level {
     ];
 
     this.frozen = false;
-
-    this.play = this.play.bind(this);
-    this.play();
   }
 
   animate() {
@@ -104,10 +104,6 @@ export default class Level {
   }
 
   drawBackground() {
-    const wall = this.ctx.createPattern(this.images.wall, "repeat");
-    this.ctx.fillStyle = wall;
-    this.ctx.fillRect(0, 0, this.ctx.canvas.width, this.ctx.canvas.height);
-
     this.ctx.drawImage(
       this.images.background, 
       8, 8, 
@@ -132,12 +128,12 @@ export default class Level {
     );
   }
 
-  play() {
-    window.requestAnimationFrame(this.play);
+  step() {
     if (!this.frozen) {
       this.update();
       this.animate();
       this.checkCollisions();
+      this.time = this.time - 1;
     } else {
       this.player.deathThroes(this.lossSequenceFrame);
       this.animate();

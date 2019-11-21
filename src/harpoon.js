@@ -14,6 +14,7 @@ export default class Harpoon {
     this.x_pos = x_pos;
     this.y_pos = HARPOON_CONSTANTS.CEILING_HEIGHT + HARPOON_CONSTANTS.MAX_HEIGHT * (1 - HARPOON_CONSTANTS.INIT_FRACTION);
     this.fraction = HARPOON_CONSTANTS.INIT_FRACTION;
+    this.frozen = false;
   }
 
   animate(ctx, itemsSprites) {
@@ -35,7 +36,7 @@ export default class Harpoon {
   }
 
   update() {
-    if (this.y_pos > HARPOON_CONSTANTS.CEILING_HEIGHT) {
+    if (this.y_pos > HARPOON_CONSTANTS.CEILING_HEIGHT && !this.frozen) {
       this.fraction = this.fraction + (1 - HARPOON_CONSTANTS.INIT_FRACTION) / (HARPOON_CONSTANTS.FLIGHT_TIME * HARPOON_CONSTANTS.FPS);
       this.y_pos = this.y_pos - (HARPOON_CONSTANTS.MAX_HEIGHT * (1 - HARPOON_CONSTANTS.INIT_FRACTION)) / (HARPOON_CONSTANTS.FLIGHT_TIME * HARPOON_CONSTANTS.FPS);
     }

@@ -1,0 +1,9 @@
+body {
+  background-color: #DCDCDC;
+  display: flex;
+  justify-content: center;
+}
+
+#game-canvas {
+  margin: 0 auto;
+}

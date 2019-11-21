@@ -54,6 +54,7 @@ export default class Player {
   }
 
   deathThroes(frame) {
+    if (this.harpoon) this.harpoon.frozen = true;
     this.x_pos = this.x_pos - CONSTANTS.VEL;
     this.y_pos = (CONSTANTS.FLOOR_HEIGHT - CONSTANTS.PLAYER_HEIGHT) - 1.5 * CONSTANTS.VEL * frame + 0.5 * 0.11 * frame * frame;
   }
