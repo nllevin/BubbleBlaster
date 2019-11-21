@@ -13,7 +13,8 @@ export default class BubbleBlaster {
       "spikes",
       "wall"
     ]);
-    this.lives = 5;
+    this.lives = 1;
+    this.score = 0;
     this.play = this.play.bind(this);
   }
 
@@ -25,7 +26,7 @@ export default class BubbleBlaster {
   }
 
   drawLevelInfo() {
-    const displayHeight = 440;
+    const displayHeight = 439;
     this.ctx.fillStyle = "rgb(220, 227, 229)";
     this.ctx.strokeStyle = "black";
     this.ctx.lineWidth = 12;
@@ -49,7 +50,7 @@ export default class BubbleBlaster {
   }
 
   drawLivesInfo() {
-    const height = 436;
+    const height = 435;
     const x_start = 93;
     this.ctx.fillStyle = "rgb(220, 227, 229)";
     
@@ -77,7 +78,7 @@ export default class BubbleBlaster {
 
   drawScoreInfo() {
     const x_start = 93;
-    const height = 472;
+    const height = 471;
     this.ctx.lineWidth = 3;
     this.ctx.font = "18px 'Press Start 2P'";
     this.ctx.fillStyle = "rgb(220, 227, 229)";
@@ -86,11 +87,11 @@ export default class BubbleBlaster {
     this.ctx.strokeRect(x_start, height, 230, 30);
 
     this.ctx.lineWidth = 2;
-    this.ctx.strokeText(`SCORE: ${230}`, x_start + 7, height + 25);
+    this.ctx.strokeText(`SCORE: ${" ".repeat(5 - String(this.score).length)}${this.score}`, x_start + 8, height + 25);
   }
 
   drawTimeInfo() {
-    const height = 421;
+    const height = 420;
     const x_start = 93;
     this.ctx.fillStyle = "gray";
     this.ctx.strokeStyle = "rgb(169, 169, 169)";
@@ -98,7 +99,7 @@ export default class BubbleBlaster {
     this.ctx.strokeRect(x_start, height, 715, 8);
     this.ctx.fillRect(x_start, height, 715, 8);
     this.ctx.fillStyle = "red";
-    this.ctx.fillRect(x_start, height, 715 * this.level.time / (45 * 60), 8);
+    this.ctx.fillRect(x_start, height, 715 * this.level.time / (this.level.startTime * 60), 8);
   }
 
   loadImages(imageNames) {
@@ -126,8 +127,28 @@ export default class BubbleBlaster {
 
     this.drawInfo();
 
-    if (!this.level.over) {
-      this.level.step()
+    if (!this.level.isStarted) {
+      this.level.start();
+    } else if (!this.level.lost) {
+      this.level.step();
+      if (this.level.outOfTime) {
+        this.strokeStyle = "black";
+        this.ctx.font = "24px 'Press Start 2P'";
+        this.ctx.strokeText("OUT OF TIME", this.ctx.canvas.width / 2 - 11 * 24 / 2, 100);
+      }
+    } else {
+      this.lives = this.lives - 1;
+      if (this.lives > 0) {
+        this.level = new Level(this.ctx, this.images);
+      } else {
+        this.ctx.strokeStyle = "red";
+        this.ctx.font = "48px 'Press Start 2P'";
+        this.ctx.lineWidth = 3;
+        this.ctx.strokeText("GAME OVER", this.ctx.canvas.width / 2 - 9 * 48 / 2, 150);
+        this.ctx.strokeText("FINAL SCORE:", this.ctx.canvas.width / 2 - 11 * 48 / 2, 250);
+        this.ctx.strokeText(this.score, this.ctx.canvas.width / 2 - String(this.score).length * 48 / 2, 350);
+      }
     }
+
   }
 }

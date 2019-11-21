@@ -9,13 +9,14 @@ const CONSTANTS = {
   LEVEL_WIDTH: 731 + 2 * 8,
   LEVEL_HEIGHT: 394 + 2 * 8,
   FPS: 60,
-  TIME: 45
+  TIME: 5
 };
 
 export default class Level {
   constructor(canvas, images) {
     this.ctx = canvas;
     this.images = images;
+    this.startTime = CONSTANTS.TIME;
     this.time = CONSTANTS.TIME * CONSTANTS.FPS;
 
     this.player = new Player(canvas);
@@ -38,7 +39,11 @@ export default class Level {
       })
     ];
 
+    this.startCounter = 0;
+    this.isStarted = false;
     this.frozen = false;
+
+    this.start = this.start.bind(this);
   }
 
   animate() {
@@ -56,10 +61,7 @@ export default class Level {
 
   checkCollisions() {
     if (this.bubbles.some(bubble => bubble.collidesWith(this.player))) {
-      this.frozen = true;
-      this.player.orientation = "dying";
-      this.player.spriteIdx = 0;
-      this.lossSequenceFrame = 1;
+      this.loseLife();
     } else {
       let bubblesCopy = this.bubbles.slice();
       let newBubbles = [];
@@ -128,12 +130,45 @@ export default class Level {
     );
   }
 
+  loseLife() {
+    this.frozen = true;
+    this.player.orientation = "dying";
+    this.player.spriteIdx = 0;
+    this.lossSequenceFrame = 1;
+
+    setTimeout(() => this.lost = true, 2500);
+  }
+  
+  start() {
+    if (!this.isStarted) {
+      window.requestAnimationFrame(this.start);
+    }
+    const levelName = "MOUNT FUJI"
+    this.ctx.font = "24px 'Press Start 2P'";
+    this.animate();
+    this.ctx.strokeText(levelName, this.ctx.canvas.width / 2 - levelName.length * 24 / 2, 100);
+    if (this.startCounter < 300 || Math.floor(this.startCounter / 300) % 2 === 0) {
+      this.ctx.strokeText("GET READY", this.ctx.canvas.width / 2 - 9 * 24 / 2, 135);
+    }
+    
+    this.startCounter = this.startCounter + 1;
+    
+    if (this.startCounter >= 2100) {
+      this.isStarted = true;
+    }
+  }
+
   step() {
     if (!this.frozen) {
       this.update();
       this.animate();
       this.checkCollisions();
       this.time = this.time - 1;
+
+      if (this.time <= 0) {
+        this.outOfTime = true;
+        this.loseLife();
+      }
     } else {
       this.player.deathThroes(this.lossSequenceFrame);
       this.animate();
