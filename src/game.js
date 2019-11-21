@@ -13,14 +13,16 @@ export default class BubbleBlaster {
         size: 0, 
         x_dir: -1, 
         x_init: canvas.canvas.width * 0.25,
-        y_init: 210
+        y_init: 210,
+        y_vel_init: 0.01
       }),
       new Bubble(canvas, {
         color: "GREEN", 
         size: 3, 
         x_dir: -1,
         x_init: canvas.canvas.width * 0.75,
-        y_init: 210
+        y_init: 210,
+        y_vel_init: 0.01
       })
     ];
     
@@ -50,7 +52,45 @@ export default class BubbleBlaster {
       left: this.images.mirrorPlayers,
       dying: this.images.players
     });
-    
+  }
+
+  checkCollisions() {
+    if (this.bubbles.some(bubble => bubble.collidesWith(this.player))) {
+      this.frozen = true;
+      this.player.orientation = "dying";
+      this.player.spriteIdx = 0;
+      this.lossSequenceFrame = 1;
+    } else if (this.player.harpoon) {
+      const poppedBubbleIdx = this.bubbles.findIndex(bubble => {
+        return bubble.collidesWith(this.player.harpoon);
+      });
+      if (poppedBubbleIdx !== -1) {
+        this.player.harpoon = null;
+        let newBubbles = this.bubbles.slice();
+        newBubbles.splice(poppedBubbleIdx, 1);
+
+        const poppedBubble = this.bubbles[poppedBubbleIdx];
+        if (poppedBubble.size) {
+          newBubbles = newBubbles.concat([
+            new Bubble(this.ctx, {
+              color: poppedBubble.color,
+              size: poppedBubble.size - 1,
+              x_dir: -1,
+              x_init: poppedBubble.x_pos + 0.375 * poppedBubble.radius(),
+              y_init: poppedBubble.y_pos + 0.375 * poppedBubble.radius()
+            }),
+            new Bubble(this.ctx, {
+              color: poppedBubble.color,
+              size: poppedBubble.size - 1,
+              x_dir: 1,
+              x_init: poppedBubble.x_pos + 0.375 * poppedBubble.radius(),
+              y_init: poppedBubble.y_pos + 0.375 * poppedBubble.radius()
+            })
+          ]);
+        }
+        this.bubbles = newBubbles;
+      }
+    }
   }
 
   loadImages(imageNames) {
@@ -76,18 +116,12 @@ export default class BubbleBlaster {
     } else if (!this.frozen) {
       this.update();
       this.animate();
-      if (this.bubbles.some(bubble => bubble.collidesWith(this.player))) {
-        this.frozen = true;
-        this.player.orientation = "dying";
-        this.player.spriteIdx = 0;
-        this.lossSequenceFrame = 1;
-      }
+      this.checkCollisions();
     } else {
       this.player.deathThroes(this.lossSequenceFrame);
       this.animate();
       this.lossSequenceFrame = this.lossSequenceFrame + 1;
     }
-
   }
 
   update() {

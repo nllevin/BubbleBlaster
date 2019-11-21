@@ -27,6 +27,13 @@ export default class Harpoon {
     )
   }
 
+  getBounds() {
+    return [
+      [this.x_pos, this.y_pos],
+      [this.x_pos + HARPOON_CONSTANTS.WIDTH, 400]
+    ];
+  }
+
   update() {
     if (this.y_pos > HARPOON_CONSTANTS.CEILING_HEIGHT) {
       this.fraction = this.fraction + (1 - HARPOON_CONSTANTS.INIT_FRACTION) / (HARPOON_CONSTANTS.FLIGHT_TIME * HARPOON_CONSTANTS.FPS);

@@ -61,7 +61,7 @@ export default class Player {
   getBounds() {
     return [
       [this.x_pos, CONSTANTS.FLOOR_HEIGHT - CONSTANTS.PLAYER_HEIGHT],
-      [this.x_pos + CONSTANTS.PLAYER_WIDTH, CONSTANTS.FLOOR_HEIGHT]
+      [this.x_pos + CONSTANTS.PLAYER_WIDTH * 0.75, CONSTANTS.FLOOR_HEIGHT]
     ];
   }
 

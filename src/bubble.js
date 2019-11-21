@@ -54,7 +54,7 @@ export default class Bubble {
 
     this.y_min = bubble.y_init - this.dims()[1];
     this.x_dir = bubble.x_dir;
-    this.y_vel_init = -1;
+    this.y_vel_init = bubble.y_vel_init || this.zeroTime() * BUBBLE_CONSTANTS.GRAVITY;
     this.time = 0;
   }
 
@@ -104,11 +104,15 @@ export default class Bubble {
     if ( this.getY() >= (400 - this.dims()[1])) {
       this.y_min = BUBBLE_CONSTANTS.Y_MIN[this.size];
       this.y_vel_init = 0;
-      this.time = -Math.sqrt(((400 - this.dims()[1]) - this.y_min) * 2 / BUBBLE_CONSTANTS.GRAVITY);
+      this.time = this.zeroTime();
     } 
 
     this.y_pos = this.getY();
     this.x_pos = this.x_pos + BUBBLE_CONSTANTS.X_VEL * this.x_dir;
     this.time = this.time + 1;
+  }
+
+  zeroTime() {
+    return -Math.sqrt(((400 - this.dims()[1]) - BUBBLE_CONSTANTS.Y_MIN[this.size]) * 2 / BUBBLE_CONSTANTS.GRAVITY);
   }
 }
