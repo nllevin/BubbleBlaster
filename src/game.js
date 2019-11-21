@@ -125,6 +125,7 @@ export default class BubbleBlaster {
     this.ctx.fillStyle = wall;
     this.ctx.fillRect(0, 0, this.ctx.canvas.width, this.ctx.canvas.height);
 
+    this.score = this.score + this.level.frameScore;
     this.drawInfo();
 
     if (!this.level.isStarted) {
@@ -144,9 +145,9 @@ export default class BubbleBlaster {
         this.ctx.strokeStyle = "red";
         this.ctx.font = "48px 'Press Start 2P'";
         this.ctx.lineWidth = 3;
-        this.ctx.strokeText("GAME OVER", this.ctx.canvas.width / 2 - 9 * 48 / 2, 150);
-        this.ctx.strokeText("FINAL SCORE:", this.ctx.canvas.width / 2 - 11 * 48 / 2, 250);
-        this.ctx.strokeText(this.score, this.ctx.canvas.width / 2 - String(this.score).length * 48 / 2, 350);
+        this.ctx.strokeText("GAME OVER", this.ctx.canvas.width / 2 - 9 * 48 / 2, 125);
+        this.ctx.strokeText("FINAL SCORE:", this.ctx.canvas.width / 2 - 11 * 48 / 2, 225);
+        this.ctx.strokeText(this.score, this.ctx.canvas.width / 2 - String(this.score).length * 48 / 2, 325);
       }
     }
 

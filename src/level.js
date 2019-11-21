@@ -9,7 +9,7 @@ const CONSTANTS = {
   LEVEL_WIDTH: 731 + 2 * 8,
   LEVEL_HEIGHT: 394 + 2 * 8,
   FPS: 60,
-  TIME: 5
+  TIME: 45
 };
 
 export default class Level {
@@ -18,6 +18,7 @@ export default class Level {
     this.images = images;
     this.startTime = CONSTANTS.TIME;
     this.time = CONSTANTS.TIME * CONSTANTS.FPS;
+    this.frameScore = 0;
 
     this.player = new Player(canvas);
     this.bubbles = [
@@ -60,6 +61,7 @@ export default class Level {
   }
 
   checkCollisions() {
+    this.frameScore = 0;
     if (this.bubbles.some(bubble => bubble.collidesWith(this.player))) {
       this.loseLife();
     } else {
@@ -99,6 +101,8 @@ export default class Level {
               })
             ]);
           }
+
+          this.frameScore = this.frameScore + (2 - Math.floor(poppedBubble.size / 2)) * 25;
         }
       }
       this.bubbles = newBubbles;
