@@ -11,9 +11,11 @@ export default class Level {
   constructor() {
   }
 
-  animate(ctx, backgroundSprites, spikesSprites) {
-    ctx.fillStyle = "blue";
+  animate(ctx, backgroundSprites, spikesSprites, wallSprite) {
+    const wall = ctx.createPattern(wallSprite, "repeat");
+    ctx.fillStyle = wall;
     ctx.fillRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+
     ctx.drawImage(
       backgroundSprites, 
       8, 8, 
