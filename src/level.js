@@ -24,8 +24,8 @@ export default class Level {
     this.bubbles = [
       new Bubble(canvas, {
         color: "RED",
-        size: 1,
-        x_dir: -1,
+        size: 3,
+        x_dir: 1,
         x_init: canvas.canvas.width * 0.25,
         y_init: 210,
         y_vel_init: 0
@@ -62,6 +62,8 @@ export default class Level {
       bubblesCopy.forEach(bubble => {
         if (bubble.y_pos > 32) {
           newBubbles.push(bubble);
+        } else {
+          this.frameScore = this.frameScore + 175;
         }
       });
 
