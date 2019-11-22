@@ -52,9 +52,9 @@ export default class Bubble {
     this.x_pos = bubble.x_init;
     this.y_pos = bubble.y_init;
 
-    this.y_min = bubble.y_init - this.dims()[1];
+    this.y_min = bubble.y_init;
     this.x_dir = bubble.x_dir;
-    this.y_vel_init = bubble.y_vel_init || this.zeroTime() * BUBBLE_CONSTANTS.GRAVITY * (6 - this.size) / 6;
+    this.y_vel_init = bubble.y_vel_init === undefined ? this.zeroTime() * BUBBLE_CONSTANTS.GRAVITY * (6 - this.size) / 6 : 0;
     this.time = 0;
   }
 

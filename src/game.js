@@ -13,7 +13,7 @@ export default class BubbleBlaster {
       "spikes",
       "wall"
     ]);
-    this.lives = 1;
+    this.lives = 5;
     this.score = 0;
     this.play = this.play.bind(this);
   }
@@ -130,14 +130,14 @@ export default class BubbleBlaster {
 
     if (!this.level.isStarted) {
       this.level.start();
-    } else if (!this.level.lost) {
+    } else if (!this.level.over()) {
       this.level.step();
       if (this.level.outOfTime) {
         this.strokeStyle = "black";
         this.ctx.font = "24px 'Press Start 2P'";
         this.ctx.strokeText("OUT OF TIME", this.ctx.canvas.width / 2 - 11 * 24 / 2, 100);
       }
-    } else {
+    } else if (this.level.lost) {
       this.lives = this.lives - 1;
       if (this.lives > 0) {
         this.level = new Level(this.ctx, this.images);
@@ -149,7 +149,15 @@ export default class BubbleBlaster {
         this.ctx.strokeText("FINAL SCORE:", this.ctx.canvas.width / 2 - 11 * 48 / 2, 225);
         this.ctx.strokeText(this.score, this.ctx.canvas.width / 2 - String(this.score).length * 48 / 2, 325);
       }
+    } else if (this.level.won) {
+      this.level.frameScore = 0;
+      this.level.animate();
+      if (this.level.time - 10 >= 0) {
+        this.level.time = this.level.time - 10;
+        this.score = this.score + 5;
+      } else {
+        this.level = new Level(this.ctx, this.images);
+      }
     }
-
   }
 }

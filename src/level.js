@@ -24,19 +24,11 @@ export default class Level {
     this.bubbles = [
       new Bubble(canvas, {
         color: "RED",
-        size: 3,
+        size: 1,
         x_dir: -1,
         x_init: canvas.canvas.width * 0.25,
         y_init: 210,
-        y_vel_init: 0.01
-      }),
-      new Bubble(canvas, {
-        color: "BLUE",
-        size: 3,
-        x_dir: 1,
-        x_init: canvas.canvas.width * 0.75,
-        y_init: 210,
-        y_vel_init: 0.01
+        y_vel_init: 0
       })
     ];
 
@@ -61,7 +53,6 @@ export default class Level {
   }
 
   checkCollisions() {
-    this.frameScore = 0;
     if (this.bubbles.some(bubble => bubble.collidesWith(this.player))) {
       this.loseLife();
     } else {
@@ -106,6 +97,10 @@ export default class Level {
         }
       }
       this.bubbles = newBubbles;
+      if (this.bubbles.length === 0) {
+        this.frozen = true;
+        this.won = true;
+      }
     }
   }
 
@@ -142,6 +137,10 @@ export default class Level {
 
     setTimeout(() => this.lost = true, 2500);
   }
+
+  over() {
+    return this.lost || this.won;
+  }
   
   start() {
     if (!this.isStarted) {
@@ -163,6 +162,8 @@ export default class Level {
   }
 
   step() {
+    this.frameScore = 0;
+    
     if (!this.frozen) {
       this.update();
       this.animate();
@@ -173,7 +174,9 @@ export default class Level {
         this.outOfTime = true;
         this.loseLife();
       }
-    } else {
+    } else if (this.won) {
+      this.animate();
+    } else {  
       this.player.deathThroes(this.lossSequenceFrame);
       this.animate();
       this.lossSequenceFrame = this.lossSequenceFrame + 1;
