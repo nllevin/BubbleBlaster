@@ -24,7 +24,7 @@ export default class Level {
     this.bubbles = [
       new Bubble(canvas, {
         color: "RED",
-        size: 3,
+        size: 1,
         x_dir: 1,
         x_init: canvas.canvas.width * 0.25,
         y_init: 210,
@@ -54,6 +54,7 @@ export default class Level {
 
   checkCollisions() {
     if (this.bubbles.some(bubble => bubble.collidesWith(this.player))) {
+      this.lost = true;
       this.loseLife();
     } else {
       let bubblesCopy = this.bubbles.slice();
@@ -136,8 +137,6 @@ export default class Level {
     this.player.orientation = "dying";
     this.player.spriteIdx = 0;
     this.lossSequenceFrame = 1;
-
-    setTimeout(() => this.lost = true, 2500);
   }
 
   over() {
@@ -145,20 +144,17 @@ export default class Level {
   }
   
   start() {
-    if (!this.isStarted) {
-      window.requestAnimationFrame(this.start);
-    }
     const levelName = "MOUNT FUJI"
     this.ctx.font = "24px 'Press Start 2P'";
     this.animate();
     this.ctx.strokeText(levelName, this.ctx.canvas.width / 2 - levelName.length * 24 / 2, 100);
-    if (this.startCounter < 300 || Math.floor(this.startCounter / 300) % 2 === 0) {
+    if (Math.floor(this.startCounter / 30) % 2 === 0) {
       this.ctx.strokeText("GET READY", this.ctx.canvas.width / 2 - 9 * 24 / 2, 135);
     }
     
     this.startCounter = this.startCounter + 1;
     
-    if (this.startCounter >= 2100) {
+    if (this.startCounter >= 210) {
       this.isStarted = true;
     }
   }
@@ -181,7 +177,6 @@ export default class Level {
     } else {  
       this.player.deathThroes(this.lossSequenceFrame);
       this.animate();
-      this.lossSequenceFrame = this.lossSequenceFrame + 1;
     }
   }
 

@@ -1,10 +1,25 @@
-html, body, h1, canvas, main {
+html, body, h1, canvas, main, button {
   margin: 0;
   padding: 0;
-  font-size: inherit;
-  font-family: inherit;
+  border: 0;
+  outline: 0;
+  font: inherit;
   color: inherit;
-  background: transparent;
+  background-color: transparent;
+  text-decoration: none;
+  list-style: none;
+  cursor: inherit;
+  display: block;
+  box-sizing: border-box;
+}
+
+ul {
+  list-style: none;
+}
+
+button {
+  -webkit-appearance: none;
+  -moz-appearance: none;
 }
 
 body {
@@ -39,4 +54,41 @@ main {
 
 #game-canvas {
   border-radius: 10px;
+}
+
+.hidden {
+  display: none;
+}
+
+#game-container {
+  position: relative;
+}
+
+.buttons {
+  color: goldenrod;
+  font-size: 36px;
+  text-align: center;
+  position: absolute;
+}
+
+#start-buttons {
+  top: 31%;
+  left: 21%;
+}
+
+.buttons li,
+#play-again {
+  margin-bottom: 25px;
+  cursor: pointer;
+}
+
+.buttons li:hover,
+#play-again:hover {
+  color: white;
+}
+
+#play-again {
+  display: none;
+  bottom: 73px;
+  left: 28%;
 }

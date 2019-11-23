@@ -13,9 +13,24 @@ export default class BubbleBlaster {
       "spikes",
       "wall"
     ]);
-    this.lives = 5;
-    this.score = 0;
     this.play = this.play.bind(this);
+
+    document.getElementById("play").addEventListener("click", () => {
+      document.getElementById("start-buttons").style.display = "none";
+      this.startGame()
+    });
+
+    const playAgain = document.getElementById("play-again");
+    playAgain.addEventListener("click", () => {
+      playAgain.style.display = "none";
+      this.startGame()
+    });
+  }
+
+  drawBrickWall() {
+    const wall = this.ctx.createPattern(this.images.wall, "repeat");
+    this.ctx.fillStyle = wall;
+    this.ctx.fillRect(0, 0, this.ctx.canvas.width, this.ctx.canvas.height);
   }
 
   drawInfo() {
@@ -102,6 +117,18 @@ export default class BubbleBlaster {
     this.ctx.fillRect(x_start, height, 715 * this.level.time / (this.level.startTime * 60), 8);
   }
 
+  gameOver() {
+    this.ctx.fillStyle = "red";
+    this.ctx.font = "48px 'Press Start 2P'";
+    this.ctx.lineWidth = 3;
+    this.ctx.fillText("GAME OVER", this.ctx.canvas.width / 2 - 9 * 48 / 2, 120);
+    this.ctx.fillText("FINAL SCORE:", this.ctx.canvas.width / 2 - 11 * 48 / 2, 236);
+    this.ctx.fillText(this.score, this.ctx.canvas.width / 2 - String(this.score).length * 48 / 2, 297);
+
+    const playAgain = document.getElementById("play-again");
+    playAgain.style.display = "block";
+  }
+
   loadImages(imageNames) {
     imageNames.forEach(imageName => {
       const image = new Image();
@@ -109,8 +136,7 @@ export default class BubbleBlaster {
       image.onload = () => {
         this.images[imageName] = image;
         if (Object.keys(this.images).length === imageNames.length) {
-          this.level = new Level(this.ctx, this.images);
-          this.play();
+          this.showMainMenu();
         }
       };
 
@@ -119,15 +145,13 @@ export default class BubbleBlaster {
   }
 
   play() {    
-    window.requestAnimationFrame(this.play);
+    const animationRequest = window.requestAnimationFrame(this.play);
 
-    const wall = this.ctx.createPattern(this.images.wall, "repeat");
-    this.ctx.fillStyle = wall;
-    this.ctx.fillRect(0, 0, this.ctx.canvas.width, this.ctx.canvas.height);
+    this.drawBrickWall();
 
     this.score = this.score + this.level.frameScore;
     this.drawInfo();
-
+    
     if (!this.level.isStarted) {
       this.level.start();
     } else if (!this.level.over()) {
@@ -138,16 +162,17 @@ export default class BubbleBlaster {
         this.ctx.strokeText("OUT OF TIME", this.ctx.canvas.width / 2 - 11 * 24 / 2, 100);
       }
     } else if (this.level.lost) {
-      this.lives = this.lives - 1;
-      if (this.lives > 0) {
-        this.level = new Level(this.ctx, this.images);
+      if (this.level.lossSequenceFrame <= 150) {
+        this.level.lossSequenceFrame = this.level.lossSequenceFrame + 1;
+        this.level.step()
       } else {
-        this.ctx.strokeStyle = "red";
-        this.ctx.font = "48px 'Press Start 2P'";
-        this.ctx.lineWidth = 3;
-        this.ctx.strokeText("GAME OVER", this.ctx.canvas.width / 2 - 9 * 48 / 2, 120);
-        this.ctx.strokeText("FINAL SCORE:", this.ctx.canvas.width / 2 - 11 * 48 / 2, 236);
-        this.ctx.strokeText(this.score, this.ctx.canvas.width / 2 - String(this.score).length * 48 / 2, 297);
+        this.lives = this.lives - 1;
+        if (this.lives > 0) {
+          this.level = new Level(this.ctx, this.images);
+        } else {
+          window.cancelAnimationFrame(animationRequest);
+          this.gameOver();
+        }
       }
     } else if (this.level.won) {
       this.level.frameScore = 0;
@@ -159,5 +184,26 @@ export default class BubbleBlaster {
         this.level = new Level(this.ctx, this.images);
       }
     }
+  }
+
+  showMainMenu() {
+    this.drawBrickWall();
+    this.ctx.drawImage(this.images.bubbles, 1, 5, 48, 45, this.ctx.canvas.width / 2 - 50, this.ctx.canvas.height / 12, 100, 100);
+    this.ctx.drawImage(this.images.bubbles, 1, 55, 48, 45, this.ctx.canvas.width / 3, this.ctx.canvas.height / 12 + 25, 50, 50);
+    this.ctx.drawImage(this.images.bubbles, 1, 55, 48, 45, this.ctx.canvas.width * 2 / 3 - 50, this.ctx.canvas.height / 12 + 25, 50, 50);
+    this.ctx.drawImage(this.images.bubbles, 1, 103, 48, 45, this.ctx.canvas.width / 4 + 12.5, this.ctx.canvas.height / 12 + 37.5, 25, 25);
+    this.ctx.drawImage(this.images.bubbles, 1, 103, 48, 45, this.ctx.canvas.width * 3 / 4 - 37.5, this.ctx.canvas.height / 12 + 37.5, 25, 25);
+    this.ctx.drawImage(this.images.bubbles, 1, 5, 48, 45, this.ctx.canvas.width / 2 - 50, this.ctx.canvas.height * 7 / 10, 100, 100);
+    this.ctx.drawImage(this.images.bubbles, 1, 55, 48, 45, this.ctx.canvas.width / 3, this.ctx.canvas.height * 7 / 10 + 25, 50, 50);
+    this.ctx.drawImage(this.images.bubbles, 1, 55, 48, 45, this.ctx.canvas.width * 2 / 3 - 50, this.ctx.canvas.height * 7 / 10 + 25, 50, 50);
+    this.ctx.drawImage(this.images.bubbles, 1, 103, 48, 45, this.ctx.canvas.width / 4 + 12.5, this.ctx.canvas.height * 7 / 10 + 37.5, 25, 25);
+    this.ctx.drawImage(this.images.bubbles, 1, 103, 48, 45, this.ctx.canvas.width * 3 / 4 - 37.5, this.ctx.canvas.height * 7 / 10 + 37.5, 25, 25);
+  }
+
+  startGame() {
+    this.lives = 1;
+    this.score = 0;
+    this.level = new Level(this.ctx, this.images);
+    this.play();
   }
 }
