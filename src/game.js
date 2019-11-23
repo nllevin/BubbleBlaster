@@ -45,6 +45,7 @@ export default class BubbleBlaster {
   }
 
   drawInfo() {
+    this.drawBrickWall();
     this.drawTimeInfo();
     this.drawLivesInfo();
     this.drawLevelInfo();
@@ -112,8 +113,8 @@ export default class BubbleBlaster {
     this.ctx.fillRect(x_start, height, 230, 30);
     this.ctx.strokeRect(x_start, height, 230, 30);
 
-    this.ctx.lineWidth = 2;
-    this.ctx.strokeText(`SCORE: ${" ".repeat(5 - String(this.score).length)}${this.score}`, x_start + 8, height + 25);
+    this.ctx.fillStyle = "black";
+    this.ctx.fillText(`SCORE: ${" ".repeat(5 - String(this.score).length)}${this.score}`, x_start + 8, height + 25);
   }
 
   drawTimeInfo() {
@@ -129,6 +130,8 @@ export default class BubbleBlaster {
   }
 
   gameOver() {
+    this.drawInfo();
+
     this.ctx.fillStyle = "red";
     this.ctx.font = "48px 'Press Start 2P'";
     this.ctx.lineWidth = 3;
@@ -157,8 +160,6 @@ export default class BubbleBlaster {
 
   play() {    
     const animationRequest = window.requestAnimationFrame(this.play);
-
-    this.drawBrickWall();
 
     this.score = this.score + this.level.frameScore;
     this.drawInfo();
@@ -212,7 +213,7 @@ export default class BubbleBlaster {
   }
 
   startGame() {
-    this.lives = 1;
+    this.lives = 5;
     this.score = 0;
     this.level = new Level(this.ctx, this.images);
     this.play();

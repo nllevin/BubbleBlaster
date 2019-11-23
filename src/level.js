@@ -24,7 +24,7 @@ export default class Level {
     this.bubbles = [
       new Bubble(canvas, {
         color: "RED",
-        size: 1,
+        size: 3,
         x_dir: 1,
         x_init: canvas.canvas.width * 0.25,
         y_init: 210,
@@ -147,6 +147,7 @@ export default class Level {
     const levelName = "MOUNT FUJI"
     this.ctx.font = "24px 'Press Start 2P'";
     this.animate();
+    this.ctx.lineWidth = 2;
     this.ctx.strokeText(levelName, this.ctx.canvas.width / 2 - levelName.length * 24 / 2, 100);
     if (Math.floor(this.startCounter / 30) % 2 === 0) {
       this.ctx.strokeText("GET READY", this.ctx.canvas.width / 2 - 9 * 24 / 2, 135);
