@@ -1,4 +1,5 @@
-html, body, h1, canvas, main, button {
+html, body, h1, canvas, main, 
+button, div, h3, p, ul, li {
   margin: 0;
   padding: 0;
   border: 0;
@@ -54,6 +55,7 @@ main {
 
 #game-canvas {
   border-radius: 10px;
+  border: 5px solid black;
 }
 
 .hidden {
@@ -72,8 +74,8 @@ main {
 }
 
 #start-buttons {
-  top: 31%;
-  left: 21%;
+  top: 38%;
+  left: 27%;
 }
 
 .buttons li,
@@ -91,4 +93,48 @@ main {
   display: none;
   bottom: 73px;
   left: 28%;
+}
+
+#instructions {
+  display: none;
+  position: absolute;
+  padding: 18px;
+  border-radius: 10px;
+  width: 480px;
+  top: 160px;
+  left: calc(50% - 240px);
+  text-align: center;
+  background-color: #DCDCDC;
+  border: 3px solid black;
+}
+
+#close-instructions {
+  margin: 0 auto;
+  cursor: pointer;
+}
+
+p:last-of-type {
+  margin-bottom: 18px;
+}
+
+#close-instructions:hover {
+  color: red;
+}
+
+.controls {
+  display: flex;
+  margin-bottom: 18px;
+  justify-content: space-around;
+}
+
+.controls ul {
+  white-space: nowrap;
+}
+
+.keys {
+  text-align: right;
+}
+
+.movements {
+  text-align: left;
 }

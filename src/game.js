@@ -14,7 +14,10 @@ export default class BubbleBlaster {
       "wall"
     ]);
     this.play = this.play.bind(this);
+    this.createButtons();
+  }
 
+  createButtons() {
     document.getElementById("play").addEventListener("click", () => {
       document.getElementById("start-buttons").style.display = "none";
       this.startGame()
@@ -24,6 +27,14 @@ export default class BubbleBlaster {
     playAgain.addEventListener("click", () => {
       playAgain.style.display = "none";
       this.startGame()
+    });
+
+    document.getElementById("instructions-button").addEventListener("click", () => {
+      document.getElementById("instructions").style.display = "block";
+    });
+
+    document.getElementById("close-instructions").addEventListener("click", () => {
+      document.getElementById("instructions").style.display = "none";
     });
   }
 
