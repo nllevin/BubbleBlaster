@@ -168,15 +168,16 @@ export default class BubbleBlaster {
       this.level.start();
     } else if (!this.level.over()) {
       this.level.step();
-      if (this.level.outOfTime) {
-        this.strokeStyle = "black";
-        this.ctx.font = "24px 'Press Start 2P'";
-        this.ctx.strokeText("OUT OF TIME", this.ctx.canvas.width / 2 - 11 * 24 / 2, 100);
-      }
     } else if (this.level.lost) {
       if (this.level.lossSequenceFrame <= 150) {
         this.level.lossSequenceFrame = this.level.lossSequenceFrame + 1;
         this.level.step()
+        if (this.level.outOfTime) {
+          this.ctx.strokeStyle = "black";
+          this.ctx.lineWidth = 2;
+          this.ctx.font = "24px 'Press Start 2P'";
+          this.ctx.strokeText("OUT OF TIME", this.ctx.canvas.width / 2 - 11 * 24 / 2, 100);
+        }
       } else {
         this.lives = this.lives - 1;
         if (this.lives > 0) {

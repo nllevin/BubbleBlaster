@@ -54,7 +54,6 @@ export default class Level {
 
   checkCollisions() {
     if (this.bubbles.some(bubble => bubble.collidesWith(this.player))) {
-      this.lost = true;
       this.loseLife();
     } else {
       let bubblesCopy = this.bubbles.slice();
@@ -133,6 +132,7 @@ export default class Level {
   }
 
   loseLife() {
+    this.lost = true;
     this.frozen = true;
     this.player.orientation = "dying";
     this.player.spriteIdx = 0;
