@@ -1,5 +1,5 @@
 html, body, h1, canvas, main, 
-button, div, h3, p, ul, li {
+button, div, h3, p, ul, li, a, footer {
   margin: 0;
   padding: 0;
   border: 0;
@@ -64,6 +64,23 @@ main {
 
 #game-container {
   position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+}
+
+footer {
+  margin-top: 12px;
+  text-align: right;
+}
+
+footer a {
+  margin-top: 6px;
+  cursor: pointer;
+}
+
+footer a:hover {
+  color: red;
 }
 
 .buttons {
@@ -91,7 +108,7 @@ main {
 
 #play-again {
   display: none;
-  bottom: 80px;
+  top: 375px;
   left: 28%;
 }
 
@@ -113,7 +130,7 @@ main {
   cursor: pointer;
 }
 
-p:last-of-type {
+#instructions p:last-of-type {
   margin-bottom: 18px;
 }
 
