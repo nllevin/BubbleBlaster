@@ -66,15 +66,15 @@ export default class Level {
                 color: poppedBubble.color,
                 size: poppedBubble.size - 1,
                 x_dir: -1,
-                x_init: poppedBubble.x_pos + 0.375 * poppedBubble.radius(),
-                y_init: poppedBubble.y_pos + 0.5 * poppedBubble.radius()
+                x_init: poppedBubble.x_pos + 3 / 4 * poppedBubble.radius(),
+                y_init: poppedBubble.y_pos + 1 / 2 * poppedBubble.radius()
               }),
               new Bubble(this.ctx, {
                 color: poppedBubble.color,
                 size: poppedBubble.size - 1,
                 x_dir: 1,
-                x_init: poppedBubble.x_pos + 0.375 * poppedBubble.radius(),
-                y_init: poppedBubble.y_pos + 0.5 * poppedBubble.radius()
+                x_init: poppedBubble.x_pos + 3 / 4 * poppedBubble.radius(),
+                y_init: poppedBubble.y_pos + 1 / 2 * poppedBubble.radius()
               })
             ]);
           }
