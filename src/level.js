@@ -1,36 +1,20 @@
 import Player from "./player";
 import Bubble from "./bubble";
-
-const CONSTANTS = {
-  BACKGROUND_WIDTH: 384,
-  BACKGROUND_HEIGHT: 208,
-  LEVEL_X: 76,
-  LEVEL_Y: 5,
-  LEVEL_WIDTH: 731 + 2 * 8,
-  LEVEL_HEIGHT: 394 + 2 * 8,
-  FPS: 60,
-  TIME: 45
-};
+import { LEVELS, LEVEL_SPRITES_MAP, CONSTANTS } from "./levels_data";
 
 export default class Level {
-  constructor(canvas, images) {
+  constructor(canvas, images, level_num) {
     this.ctx = canvas;
     this.images = images;
-    this.startTime = CONSTANTS.TIME;
-    this.time = CONSTANTS.TIME * CONSTANTS.FPS;
+    this.player = new Player(canvas);
+
+    const levelSpecs = LEVELS[level_num];
+    this.location = levelSpecs.location;
+    this.startTime = levelSpecs.time;
+    this.time = levelSpecs.time * CONSTANTS.FPS;
     this.frameScore = 0;
 
-    this.player = new Player(canvas);
-    this.bubbles = [
-      new Bubble(canvas, {
-        color: "RED",
-        size: 3,
-        x_dir: 1,
-        x_init: canvas.canvas.width * 0.25,
-        y_init: 210,
-        y_vel_init: 0
-      })
-    ];
+    this.bubbles = levelSpecs.bubbles.map(bubble => new Bubble(canvas, bubble));
 
     this.startCounter = 0;
     this.isStarted = false;
@@ -109,7 +93,7 @@ export default class Level {
   drawBackground() {
     this.ctx.drawImage(
       this.images.background, 
-      8, 8, 
+      ...LEVEL_SPRITES_MAP[this.location],
       CONSTANTS.BACKGROUND_WIDTH, CONSTANTS.BACKGROUND_HEIGHT, 
       CONSTANTS.LEVEL_X, CONSTANTS.LEVEL_Y, 
       CONSTANTS.LEVEL_WIDTH, CONSTANTS.LEVEL_HEIGHT
@@ -144,7 +128,7 @@ export default class Level {
   }
   
   start() {
-    const levelName = "MOUNT FUJI"
+    const levelName = this.location;
     this.ctx.font = "24px 'Press Start 2P'";
     this.animate();
     this.ctx.lineWidth = 2;

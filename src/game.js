@@ -1,5 +1,9 @@
 import Level from "./level";
 
+const GAME_CONSTANTS = {
+  MAX_LEVEL: 7
+};
+
 export default class BubbleBlaster {
   constructor(canvas) {
     this.ctx = canvas;
@@ -73,7 +77,7 @@ export default class BubbleBlaster {
     this.ctx.lineWidth = 2;
     this.ctx.font = "18px 'Press Start 2P'";
     this.ctx.strokeText("LEVEL", this.ctx.canvas.width / 2 - 44, displayHeight + 25);
-    this.ctx.strokeText("1", this.ctx.canvas.width / 2 - 9, displayHeight + 50);
+    this.ctx.strokeText(this.currLevel, this.ctx.canvas.width / 2 - 9, displayHeight + 50);
   }
 
   drawLivesInfo() {
@@ -135,7 +139,8 @@ export default class BubbleBlaster {
     this.ctx.fillStyle = "red";
     this.ctx.font = "48px 'Press Start 2P'";
     this.ctx.lineWidth = 3;
-    this.ctx.fillText("GAME OVER", this.ctx.canvas.width / 2 - 9 * 48 / 2, 120);
+    const outcomeText = this.lives > 0 ? "YOU WIN!" : "GAME OVER";
+    this.ctx.fillText(outcomeText, this.ctx.canvas.width / 2 - outcomeText.length * 48 / 2, 120);
     this.ctx.fillText("FINAL SCORE:", this.ctx.canvas.width / 2 - 11 * 48 / 2, 236);
     this.ctx.fillText(this.score, this.ctx.canvas.width / 2 - String(this.score).length * 48 / 2, 297);
 
@@ -181,7 +186,7 @@ export default class BubbleBlaster {
       } else {
         this.lives = this.lives - 1;
         if (this.lives > 0) {
-          this.level = new Level(this.ctx, this.images);
+          this.startLevel();
         } else {
           window.cancelAnimationFrame(animationRequest);
           this.gameOver();
@@ -194,7 +199,13 @@ export default class BubbleBlaster {
         this.level.time = this.level.time - 10;
         this.score = this.score + 5;
       } else {
-        this.level = new Level(this.ctx, this.images);
+        if (this.currLevel < GAME_CONSTANTS.MAX_LEVEL) {
+          this.currLevel = this.currLevel + 1;
+          this.startLevel();
+        } else {      
+          window.cancelAnimationFrame(animationRequest);
+          this.gameOver();
+        }
       }
     }
   }
@@ -216,7 +227,12 @@ export default class BubbleBlaster {
   startGame() {
     this.lives = 5;
     this.score = 0;
-    this.level = new Level(this.ctx, this.images);
+    this.currLevel = 1;
+    this.startLevel();
     this.play();
+  }
+
+  startLevel() {
+    this.level = new Level(this.ctx, this.images, this.currLevel);
   }
 }

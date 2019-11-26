@@ -49,10 +49,9 @@ export default class Bubble {
     this.color = bubble.color;
     this.size = bubble.size;
 
-    this.x_pos = bubble.x_init;
-    this.y_pos = bubble.y_init;
-
-    this.y_min = bubble.y_init;
+    this.x_pos = bubble.x_init - 1 / 2 * BUBBLE_CONSTANTS.DIMS[bubble.size][0];
+    this.y_pos = bubble.y_init - 1 / 2 * BUBBLE_CONSTANTS.DIMS[bubble.size][1];
+    this.y_min = bubble.y_init - 1 / 2 * BUBBLE_CONSTANTS.DIMS[bubble.size][1];
     this.x_dir = bubble.x_dir;
     this.y_vel_init = bubble.y_vel_init === undefined ? this.zeroTime() * BUBBLE_CONSTANTS.GRAVITY * (6 - this.size) / 6 : 0;
     this.time = 0;
