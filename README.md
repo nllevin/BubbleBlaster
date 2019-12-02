@@ -4,7 +4,7 @@
 
 [Live Link](http://bubble-blaster-9d139.web.app/)
 
-Bubble Blaster is inspired by the perenially popular online game, Bubble Trouble, which itself was inspired by the classic video game known variously as Pomping World, Pang, and Buster Bros in its different releases.
+Bubble Blaster is inspired by the perennially popular online game, Bubble Trouble, which itself was inspired by the classic video game known variously as Pomping World, Pang, and Buster Bros in its different releases.
 
 ## Instructions
 
